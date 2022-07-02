@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -19,12 +18,15 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    private final ScheduleRepository scheduleRepository;
-
     @Autowired
     public ScheduleController(ScheduleService scheduleService, ScheduleRepository scheduleRepository) {
         this.scheduleService = scheduleService;
-        this.scheduleRepository = scheduleRepository;
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Schedule>> getAll(){
+
+        return ResponseEntity.ok(scheduleService.getAll());
     }
 
     @GetMapping("/{id}")
@@ -44,14 +46,4 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.createSchedule(schedule), HttpStatus.CREATED);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id){
-        Optional<Schedule> del = scheduleRepository.findById(id);
-
-        if(del.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        scheduleRepository.deleteById(id);
-    }
 }
