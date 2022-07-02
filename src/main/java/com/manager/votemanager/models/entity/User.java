@@ -1,7 +1,9 @@
 package com.manager.votemanager.models.entity;
 
+import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.RoleEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +14,11 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
+@Builder
 @Table(name = "USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"EMAIL", "CPF"})})
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends DateAudit {
 
     @Id
     @Column(name = "ID")

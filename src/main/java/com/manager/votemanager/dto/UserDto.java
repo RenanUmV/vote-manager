@@ -12,6 +12,6 @@ public class UserDto {
 
     private String name;
     private String cpf;
-    private String password;
     private RoleEnum role;
+
 }

@@ -30,7 +30,13 @@ public class UserService {
         return repository.findByName(name).orElse(null);
     }
 
+    public User getUserById(Long id){
+
+        return repository.findById(id).orElse(null);
+    }
+
     public User createUser(User user){
+
 
         userValidation(user);
 
@@ -56,6 +62,11 @@ public class UserService {
             return repository.save(user);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", null);
+    }
+
+    public void deleteUser(Long id){
+
+        repository.deleteById(id);
     }
 
     private void userValidation(User user) {
