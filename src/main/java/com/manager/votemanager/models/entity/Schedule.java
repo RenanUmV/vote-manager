@@ -1,5 +1,6 @@
 package com.manager.votemanager.models.entity;
 
+import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
 @Table(name = "SCHEDULE")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Schedule {
+public class Schedule extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +34,5 @@ public class Schedule {
     @Column(name = "STATUS")
     @Enumerated
     private StatusEnum status;
+
 }
