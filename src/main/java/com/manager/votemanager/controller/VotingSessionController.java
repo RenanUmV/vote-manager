@@ -24,11 +24,11 @@ public class VotingSessionController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VotingSession> getById(@PathVariable Long id){
-
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<VotingSession> getById(@PathVariable Long id){
+//
+//        return new ResponseEntity<>(service.verifyExistentSchedule(id), HttpStatus.OK);
+//    }
 
     @GetMapping("/all")
     public ResponseEntity<List<VotingSession>> getAll(){

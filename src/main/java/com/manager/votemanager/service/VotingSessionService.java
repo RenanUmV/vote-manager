@@ -29,35 +29,36 @@ public class VotingSessionService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public VotingSession getById(Long id){
+    private boolean verifyExistentSchedule(Long scheduleId) {
 
-        return votingSessionrepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Voting Session not found"));
+        return votingSessionrepository.existsByScheduleId(scheduleId);
     }
 
-    public List<VotingSession> getAll(){
+    public List<VotingSession> getAll() {
 
         return votingSessionrepository.findAll();
     }
 
 
-    public VotingSession createSession(SessionRequestDto dto){
-        if (getById(dto.getScheduleId()).getSchedule().getStatus().equals(StatusEnum.valueOf("CLOSED"))){
+    public VotingSession createSession(SessionRequestDto dto) {
+        if (verifyExistentSchedule(dto.getScheduleId())) {
             throw new RuntimeException("This Schedule has already been voted");
         }
 
-        Schedule schedule = scheduleRepository.findById(dto.getScheduleId())
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
-
         VotingSession votingSession = VotingSession.builder()
                 .duration(dto.getDuration())
-                .schedule(schedule)
+                .schedule(getSchedule(dto))
                 .build();
 
         return votingSessionrepository.save(votingSession);
     }
 
-    public VotingSession startSession(SessionStartRequestDto dto){
+    private Schedule getSchedule(SessionRequestDto dto) {
+        return scheduleRepository.findById(dto.getScheduleId())
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+    }
+
+    public VotingSession startSession(SessionStartRequestDto dto) {
         VotingSession votingSession = votingSessionrepository.findById(dto.getSessionId())
                 .orElseThrow(() -> new RuntimeException("Voting Session not found!!!"));
 
@@ -67,7 +68,7 @@ public class VotingSessionService {
     }
 
     @Scheduled(fixedDelay = 5000)
-    public void closeSession(){
+    public void closeSession() {
 
         List<VotingSession> votingSessionList = getAllExpiredVotingsButNotClosed();
 
@@ -78,7 +79,7 @@ public class VotingSessionService {
 
     }
 
-    private List<VotingSession> getAllExpiredVotingsButNotClosed(){
+    private List<VotingSession> getAllExpiredVotingsButNotClosed() {
 
         return votingSessionrepository.findAll().stream().filter(
                 voting -> Instant.now().isAfter(voting.getClosedAt())
@@ -86,7 +87,7 @@ public class VotingSessionService {
         ).collect(Collectors.toList());
     }
 
-    private Integer closedTime(Integer duration){
+    private Integer closedTime(Integer duration) {
 
         return Objects.isNull(duration) ? 60 : duration;
     }
