@@ -8,7 +8,6 @@ import com.manager.votemanager.repository.VotingSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -26,7 +25,6 @@ public class VoteService {
         this.votingSessionService = votingSessionService;
     }
 
-    @Transactional
     public Vote voting(VoteRequestDto dto) {
         Optional<VotingSession> votingSession = votingSessionRepository.findById(dto.getVoteSessionId());
 
@@ -35,7 +33,7 @@ public class VoteService {
         }
 
         Vote vote = Vote.builder()
-                .vote(dto.getVote())
+                .selectVote(dto.getVote())
                 .voteInstant(Instant.now())
                 .votingSession(votingSession.get()).build();
 

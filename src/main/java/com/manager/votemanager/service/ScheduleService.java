@@ -2,13 +2,13 @@ package com.manager.votemanager.service;
 
 import com.manager.votemanager.models.entity.Schedule;
 import com.manager.votemanager.models.enums.StatusEnum;
+import com.manager.votemanager.models.enums.VoteEnum;
 import com.manager.votemanager.repository.ScheduleRepository;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ScheduleService {
@@ -45,6 +45,30 @@ public class ScheduleService {
         repository.deleteById(id);
     }
 
+    public void changeStatus(Schedule source){
+
+        source.setStatus(StatusEnum.CLOSED);
+
+        repository.save(source);
+    }
+
+    public void setWinner(Schedule schedule){
+
+        if (schedule.getQtdYes() > schedule.getQtdNo()){
+
+            schedule.setWinner(VoteEnum.YES);
+        } else if (schedule.getQtdYes() < schedule.getQtdNo()) {
+
+            schedule.setWinner(VoteEnum.NO);
+        }
+    }
+
+    public void setPercent(Schedule schedule){
 
 
+        schedule.setYesPercent(Precision.round(((
+                Double.valueOf(schedule.getQtdYes())/ schedule.getQtdVotes())*100), 2));
+        schedule.setNoPercent(Precision.round(((
+                Double.valueOf(schedule.getQtdNo())/ schedule.getQtdVotes())*100), 2));
+    }
 }

@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+trabalho_readme (2).md
 
 ### STS ###
 .apt_generated

@@ -1,12 +1,9 @@
 package com.manager.votemanager.models.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.VoteEnum;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -17,6 +14,7 @@ import java.time.Instant;
 @Table(name = "VOTE")
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 public class Vote extends DateAudit {
 
     @Id
@@ -26,13 +24,13 @@ public class Vote extends DateAudit {
 
     @Enumerated
     @Column(name = "VOTE")
-    private VoteEnum vote;
+    private VoteEnum selectVote;
 
     @Column(name = "VOTEINSTANT")
     private Instant voteInstant;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties("votes")
     @JoinColumn(name = "ID_VOTING_SESSION")
     private VotingSession votingSession;
 }

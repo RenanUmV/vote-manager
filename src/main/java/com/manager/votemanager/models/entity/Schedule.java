@@ -2,6 +2,7 @@ package com.manager.votemanager.models.entity;
 
 import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.StatusEnum;
+import com.manager.votemanager.models.enums.VoteEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,5 +35,23 @@ public class Schedule extends DateAudit {
     @Column(name = "STATUS")
     @Enumerated
     private StatusEnum status;
+
+    @Column(name = "WINNER")
+    private VoteEnum winner;
+
+    @Column(name = "QTDVOTES")
+    private Integer qtdVotes;
+
+    @Column(name = "QTDYES")
+    private Integer qtdYes;
+
+    @Column(name = "QTDNO")
+    private Integer qtdNo;
+
+    @Column(name = "yesPercent")
+    private Double yesPercent;
+
+    @Column(name = "noPercent")
+    private Double noPercent;
 
 }

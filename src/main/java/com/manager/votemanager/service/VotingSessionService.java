@@ -5,6 +5,7 @@ import com.manager.votemanager.dto.SessionStartRequestDto;
 import com.manager.votemanager.models.entity.Schedule;
 import com.manager.votemanager.models.entity.VotingSession;
 import com.manager.votemanager.models.enums.StatusEnum;
+import com.manager.votemanager.models.enums.VoteEnum;
 import com.manager.votemanager.repository.ScheduleRepository;
 import com.manager.votemanager.repository.VotingSessionRepository;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,9 +26,13 @@ public class VotingSessionService {
 
     private final ScheduleRepository scheduleRepository;
 
-    public VotingSessionService(VotingSessionRepository votingSessionrepository, ScheduleRepository scheduleRepository) {
+    private final ScheduleService scheduleService;
+
+    public VotingSessionService(VotingSessionRepository votingSessionrepository, ScheduleRepository scheduleRepository,
+                                ScheduleService scheduleService) {
         this.votingSessionrepository = votingSessionrepository;
         this.scheduleRepository = scheduleRepository;
+        this.scheduleService = scheduleService;
     }
 
     private boolean verifyExistentSchedule(Long scheduleId) {
@@ -39,10 +45,14 @@ public class VotingSessionService {
         return votingSessionrepository.findAll();
     }
 
+    public VotingSession getById(Long id){
+
+        return votingSessionrepository.findById(id).orElse(null);
+    }
 
     public VotingSession createSession(SessionRequestDto dto) {
         if (verifyExistentSchedule(dto.getScheduleId())) {
-            throw new RuntimeException("This Schedule has already been voted");
+            throw new RuntimeException("The given Schedule does not exists");
         }
 
         VotingSession votingSession = VotingSession.builder()
@@ -62,6 +72,10 @@ public class VotingSessionService {
         VotingSession votingSession = votingSessionrepository.findById(dto.getSessionId())
                 .orElseThrow(() -> new RuntimeException("Voting Session not found!!!"));
 
+        if (votingSession.getSchedule().getStatus().equals(StatusEnum.valueOf("CLOSED"))){
+            throw new RuntimeException("This Schedule is CLOSED");
+        }
+
         votingSession.setClosedAt(Instant.now().plus(closedTime(votingSession.getDuration()), ChronoUnit.SECONDS));
 
         return votingSessionrepository.save(votingSession);
@@ -73,17 +87,37 @@ public class VotingSessionService {
         List<VotingSession> votingSessionList = getAllExpiredVotingsButNotClosed();
 
         votingSessionList.forEach(voting -> {
-            voting.getSchedule().setStatus(StatusEnum.valueOf("CLOSED"));
+            voting.getSchedule().setQtdVotes(voting.getVotes().size());
+            voting.getSchedule().setQtdYes(qtYes(voting));
+            voting.getSchedule().setQtdNo(qtNo(voting));
             votingSessionrepository.save(voting);
+            scheduleService.changeStatus(voting.getSchedule());
+            scheduleService.setWinner(voting.getSchedule());
+            scheduleService.setPercent(voting.getSchedule());
+            scheduleRepository.save(voting.getSchedule());
         });
 
+
+    }
+
+    public Integer qtYes(VotingSession votingSession){
+
+        return Math.toIntExact(votingSession.getVotes().stream()
+                .filter(c -> c.getSelectVote().equals(VoteEnum.valueOf("YES")))
+                .count());
+    }
+
+    public Integer qtNo(VotingSession votingSession){
+
+        return Math.toIntExact(votingSession.getVotes().stream()
+                .filter(c -> c.getSelectVote().equals(VoteEnum.valueOf("NO")))
+                .count());
     }
 
     private List<VotingSession> getAllExpiredVotingsButNotClosed() {
 
         return votingSessionrepository.findAll().stream().filter(
-                voting -> Instant.now().isAfter(voting.getClosedAt())
-                        && voting.getSchedule().getStatus().equals(StatusEnum.valueOf("OPEN"))
+                votingSession -> votingSession.isExpired() && votingSession.isOpen()
         ).collect(Collectors.toList());
     }
 

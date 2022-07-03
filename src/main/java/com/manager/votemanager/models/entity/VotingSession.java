@@ -1,11 +1,11 @@
 package com.manager.votemanager.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manager.votemanager.models.entity.audit.DateAudit;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import com.manager.votemanager.models.enums.StatusEnum;
+import com.manager.votemanager.models.enums.VoteEnum;
+import lombok.*;
+import net.bytebuddy.description.field.FieldDescription;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "VOTINGSESSION")
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class VotingSession extends DateAudit {
@@ -34,8 +35,20 @@ public class VotingSession extends DateAudit {
     @JoinColumn(name = "ID_PAUTA")
     private Schedule schedule;
 
-    @OneToMany(mappedBy = "votingSession")
-    private List<Vote> votes;
+    @JsonIgnoreProperties("votingSession")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "votingSession", cascade = CascadeType.ALL)
+    private List<Vote> votes = new ArrayList<>();
+
+
+    public boolean isExpired(){
+
+        return this.getClosedAt() != null && this.getClosedAt().isBefore(Instant.now());
+    }
+
+    public boolean isOpen(){
+
+        return getSchedule().getStatus().equals(StatusEnum.valueOf("OPEN"));
+    }
 
 
 
