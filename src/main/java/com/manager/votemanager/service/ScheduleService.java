@@ -54,17 +54,16 @@ public class ScheduleService {
 
     public void setWinner(Schedule schedule){
 
-        if (schedule.getQtdYes() > schedule.getQtdNo()){
+        if (schedule.getYesPercent() > schedule.getNoPercent()){
 
             schedule.setWinner(VoteEnum.YES);
-        } else if (schedule.getQtdYes() < schedule.getQtdNo()) {
+        }else {
 
             schedule.setWinner(VoteEnum.NO);
         }
     }
 
     public void setPercent(Schedule schedule){
-
 
         schedule.setYesPercent(Precision.round(((
                 Double.valueOf(schedule.getQtdYes())/ schedule.getQtdVotes())*100), 2));

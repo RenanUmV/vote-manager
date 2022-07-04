@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -56,7 +55,7 @@ public class VotingSessionService {
         }
 
         VotingSession votingSession = VotingSession.builder()
-                .duration(dto.getDuration())
+                .duration(closedTime(dto.getDuration()))
                 .schedule(getSchedule(dto))
                 .build();
 
@@ -76,7 +75,7 @@ public class VotingSessionService {
             throw new RuntimeException("This Schedule is CLOSED");
         }
 
-        votingSession.setClosedAt(Instant.now().plus(closedTime(votingSession.getDuration()), ChronoUnit.SECONDS));
+        votingSession.setClosedAt(Instant.now().plus(votingSession.getDuration(), ChronoUnit.SECONDS));
 
         return votingSessionrepository.save(votingSession);
     }
@@ -92,12 +91,10 @@ public class VotingSessionService {
             voting.getSchedule().setQtdNo(qtNo(voting));
             votingSessionrepository.save(voting);
             scheduleService.changeStatus(voting.getSchedule());
-            scheduleService.setWinner(voting.getSchedule());
             scheduleService.setPercent(voting.getSchedule());
+            scheduleService.setWinner(voting.getSchedule());
             scheduleRepository.save(voting.getSchedule());
         });
-
-
     }
 
     public Integer qtYes(VotingSession votingSession){

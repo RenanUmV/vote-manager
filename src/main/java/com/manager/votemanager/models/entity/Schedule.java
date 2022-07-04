@@ -40,18 +40,17 @@ public class Schedule extends DateAudit {
     private VoteEnum winner;
 
     @Column(name = "QTDVOTES")
-    private Integer qtdVotes;
+    private Integer qtdVotes = 0;
 
     @Column(name = "QTDYES")
-    private Integer qtdYes;
+    private Integer qtdYes = 0;
 
     @Column(name = "QTDNO")
-    private Integer qtdNo;
+    private Integer qtdNo = 0;
 
     @Column(name = "yesPercent")
-    private Double yesPercent;
+    private Double yesPercent = 0.00;
 
     @Column(name = "noPercent")
-    private Double noPercent;
-
+    private Double noPercent = 0.00;
 }
