@@ -6,11 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -18,7 +21,7 @@ import javax.validation.constraints.Size;
 @Table(name = "USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"EMAIL", "CPF"})})
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends DateAudit {
+public class User extends DateAudit implements UserDetails {
 
     @Id
     @Column(name = "ID")
@@ -49,4 +52,34 @@ public class User extends DateAudit {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", length = 20)
     private RoleEnum role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
