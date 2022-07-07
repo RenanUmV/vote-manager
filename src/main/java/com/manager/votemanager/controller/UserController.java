@@ -1,6 +1,7 @@
 package com.manager.votemanager.controller;
 
 import com.manager.votemanager.config.security.TokenSeervice;
+import com.manager.votemanager.dto.TokenDto;
 import com.manager.votemanager.dto.UserLoginDto;
 import com.manager.votemanager.models.entity.User;
 import com.manager.votemanager.repository.UserRepository;
@@ -30,7 +31,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, TokenSeervice tokenService) {
 
         this.userService = userService;
         this.authenticationManager = authenticationManager;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UserLoginDto dto){
+    public ResponseEntity<TokenDto> login(@RequestBody @Valid UserLoginDto dto){
         UsernamePasswordAuthenticationToken dataLogin = dto.converter();
 
         try{
@@ -57,12 +58,11 @@ public class UserController {
 
             String token = tokenService.generateToken(authentication);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new TokenDto(token, "Bearer"));
         }catch (AuthenticationException e){
 
             return ResponseEntity.badRequest().build();
         }
-
     }
 
     @PutMapping("/update")

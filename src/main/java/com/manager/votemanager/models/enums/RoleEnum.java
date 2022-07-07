@@ -1,7 +1,9 @@
 package com.manager.votemanager.models.enums;
 
 
-public enum RoleEnum {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum RoleEnum implements GrantedAuthority {
     ADMIN("System admin"),
     COOPERATE("Commom Cooperate");
 
@@ -12,5 +14,10 @@ public enum RoleEnum {
 
     public String getLabel() {
         return label;
+    }
+
+    @Override
+    public String getAuthority() {
+        return getLabel();
     }
 }
