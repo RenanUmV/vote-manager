@@ -3,9 +3,7 @@ package com.manager.votemanager.models.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.StatusEnum;
-import com.manager.votemanager.models.enums.VoteEnum;
 import lombok.*;
-import net.bytebuddy.description.field.FieldDescription;
 
 import javax.persistence.*;
 import java.time.Instant;

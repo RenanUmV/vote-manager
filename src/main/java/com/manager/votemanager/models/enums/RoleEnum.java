@@ -7,7 +7,7 @@ public enum RoleEnum implements GrantedAuthority {
     ROLE_ADMIN("System admin"),
     ROLE_COOPERATE("Commom Cooperate");
 
-    private String label;
+    private final String label;
     RoleEnum(String label) {
         this.label = label;
     }

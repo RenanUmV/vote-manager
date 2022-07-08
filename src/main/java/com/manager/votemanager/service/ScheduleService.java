@@ -56,10 +56,13 @@ public class ScheduleService {
 
         if (schedule.getYesPercent() > schedule.getNoPercent()){
 
-            schedule.setWinner(VoteEnum.YES);
+            schedule.setWinner(VoteEnum.YES.getLabel());
+        }else if(schedule.getYesPercent() < schedule.getNoPercent()){
+
+            schedule.setWinner(VoteEnum.NO.getLabel());
         }else {
 
-            schedule.setWinner(VoteEnum.NO);
+            schedule.setWinner("DRAW");
         }
     }
 

@@ -25,11 +25,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfigurations {
 
-    @Autowired
+    String ROLE_ADMIN = "ADMIN";
+    String ROLE_COOPERATE = "COOPERATE";
+
     private TokenSeervice tokenSeervice;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public SecurityConfigurations(TokenSeervice tokenSeervice, UserService userService) {
+        this.tokenSeervice = tokenSeervice;
+        this.userService = userService;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -55,12 +62,12 @@ public class SecurityConfigurations {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/v1/user/create").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/schedule/all").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/schedule/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/v1/session/*").hasRole("ADMIN")
-                .antMatchers("/v1/vote/*").hasRole("ADMIN")
-                .antMatchers("/v1/vote/vote").hasRole("COOPERATE")
                 .antMatchers(HttpMethod.POST, "/v1/user/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/schedule/all").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/schedule/*").hasRole(ROLE_ADMIN)
+                .antMatchers(HttpMethod.GET, "/v1/session/*").hasRole(ROLE_ADMIN)
+                .antMatchers("/v1/vote/*").hasRole(ROLE_ADMIN)
+                .antMatchers("/v1/vote/vote").hasRole(ROLE_COOPERATE)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

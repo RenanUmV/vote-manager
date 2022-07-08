@@ -4,7 +4,6 @@ import com.manager.votemanager.config.security.TokenSeervice;
 import com.manager.votemanager.dto.TokenDto;
 import com.manager.votemanager.dto.UserLoginDto;
 import com.manager.votemanager.models.entity.User;
-import com.manager.votemanager.repository.UserRepository;
 import com.manager.votemanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

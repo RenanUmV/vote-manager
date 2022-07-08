@@ -1,9 +1,15 @@
 package com.manager.votemanager.models.enums;
 
-import javax.persistence.Enumerated;
-
 public enum VoteEnum {
 
-    YES,
-    NO
+    YES("YES"),
+    NO("NO");
+
+    private final String label;
+
+    VoteEnum(String label){this.label = label;}
+
+    public String getLabel() {
+        return label;
+    }
 }
