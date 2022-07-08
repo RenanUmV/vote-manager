@@ -85,6 +85,7 @@ public class ScheduleControllerIntegrationTest {
 
     private static Schedule mockScheduleResult() {
 
-        return new Schedule(1L, "Test schedule", "test if schedulo method post works", StatusEnum.OPEN);
+//        return new Schedule(1L, "Test schedule", "test if schedulo method post works", StatusEnum.OPEN);
+        return null;
     }
 }

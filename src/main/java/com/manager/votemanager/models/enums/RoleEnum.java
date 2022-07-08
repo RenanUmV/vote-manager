@@ -4,8 +4,8 @@ package com.manager.votemanager.models.enums;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum RoleEnum implements GrantedAuthority {
-    ADMIN("System admin"),
-    COOPERATE("Commom Cooperate");
+    ROLE_ADMIN("System admin"),
+    ROLE_COOPERATE("Commom Cooperate");
 
     private String label;
     RoleEnum(String label) {

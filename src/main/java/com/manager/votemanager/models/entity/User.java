@@ -58,7 +58,8 @@ public class User extends DateAudit implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        return  Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

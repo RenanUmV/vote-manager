@@ -62,7 +62,7 @@ class UserControllerIntegrationTest {
 
     private static User mockUserResult() {
 
-        return new User(1L, "Testing", "12345678910", "test@email.com", "123456", RoleEnum.ADMIN);
+        return new User(1L, "Testing", "12345678910", "test@email.com", "123456", RoleEnum.ROLE_ADMIN);
     }
 
 }

@@ -41,7 +41,7 @@ public class SecurityConfigurations {
         UserDetails user = User.builder()
                 .email("admin")
                 .password(encoder().encode("admin"))
-                .role(RoleEnum.ADMIN).build();
+                .role(RoleEnum.ROLE_ADMIN).build();
 
         return new InMemoryUserDetailsManager(user);
     }
@@ -54,7 +54,9 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
+                .antMatchers(HttpMethod.POST, "/v1/user/create").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/schedule/all").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/schedule/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/v1/session/*").hasRole("ADMIN")
                 .antMatchers("/v1/vote/*").hasRole("ADMIN")
                 .antMatchers("/v1/vote/vote").hasRole("COOPERATE")
