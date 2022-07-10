@@ -2,6 +2,7 @@ package com.manager.votemanager.service;
 
 import com.manager.votemanager.models.entity.User;
 import com.manager.votemanager.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -27,21 +29,35 @@ public class UserService {
 
     public User getUser(String name) {
 
+        log.info("Get user by name: {}", name);
         return repository.findByName(name).orElse(null);
+    }
+
+    public User getByEmail(String email){
+
+        log.info("Get user by email: {}", email);
+        return repository.findByEmail(email).orElse(null);
     }
 
     public User getUserById(Long id){
 
+        log.info("Get user by id: {}", id);
         return repository.findById(id).orElse(null);
     }
 
-    public User createUser(User user){
+    public User getByCpf(String cpf){
 
+        log.info("Get user by cpf: {}", cpf);
+        return repository.findByCpf(cpf).orElse(null);
+    }
+
+    public User createUser(User user){
 
         userValidation(user);
 
         user.setPassword(encryptPassword(user.getPassword()));
 
+        log.info("User {} has created", user.getName());
         return repository.save(user);
     }
 
@@ -51,7 +67,8 @@ public class UserService {
             Optional<User> findUser = repository.findByEmail(user.getEmail());
 
             if (findUser.isPresent() && !Objects.equals(findUser.get().getId(), user.getId())){
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exits", null);
+                log.info("User already exists");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists", null);
             }
 
             if (Boolean.FALSE.equals(cpfService.validateCpf(user.getCpf()))){
@@ -61,6 +78,7 @@ public class UserService {
             user.setPassword(encryptPassword(user.getPassword()));
             return repository.save(user);
         }
+        log.info("User Not Found");
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", null);
     }
 

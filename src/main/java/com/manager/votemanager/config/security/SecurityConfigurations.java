@@ -28,9 +28,9 @@ public class SecurityConfigurations {
     String ROLE_ADMIN = "ADMIN";
     String ROLE_COOPERATE = "COOPERATE";
 
-    private TokenSeervice tokenSeervice;
+    private final TokenSeervice tokenSeervice;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public SecurityConfigurations(TokenSeervice tokenSeervice, UserService userService) {
@@ -63,11 +63,8 @@ public class SecurityConfigurations {
         http.authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/v1/user/create").permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/user/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/schedule/all").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/schedule/*").hasRole(ROLE_ADMIN)
-                .antMatchers(HttpMethod.GET, "/v1/session/*").hasRole(ROLE_ADMIN)
-                .antMatchers("/v1/vote/*").hasRole(ROLE_ADMIN)
-                .antMatchers("/v1/vote/vote").hasRole(ROLE_COOPERATE)
+                .antMatchers(HttpMethod.POST,"/v1/vote/vote").hasRole(ROLE_COOPERATE)
+                .antMatchers("/v1/**").hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

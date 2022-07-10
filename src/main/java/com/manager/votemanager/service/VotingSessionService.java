@@ -8,6 +8,7 @@ import com.manager.votemanager.models.enums.StatusEnum;
 import com.manager.votemanager.models.enums.VoteEnum;
 import com.manager.votemanager.repository.ScheduleRepository;
 import com.manager.votemanager.repository.VotingSessionRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 public class VotingSessionService {
 
@@ -51,7 +53,7 @@ public class VotingSessionService {
 
     public VotingSession createSession(SessionRequestDto dto) {
         if (verifyExistentSchedule(dto.getScheduleId())) {
-            throw new RuntimeException("The given Schedule does not exists");
+            throw new RuntimeException("The given Voting session has been created");
         }
 
         VotingSession votingSession = VotingSession.builder()
@@ -77,6 +79,7 @@ public class VotingSessionService {
 
         votingSession.setClosedAt(Instant.now().plus(votingSession.getDuration(), ChronoUnit.SECONDS));
 
+        log.info("Starting voting session for schedule: {}", votingSession.getSchedule().getName());
         return votingSessionrepository.save(votingSession);
     }
 
@@ -92,7 +95,7 @@ public class VotingSessionService {
             votingSessionrepository.save(voting);
             scheduleService.changeStatus(voting.getSchedule());
             scheduleService.setPercent(voting.getSchedule());
-            scheduleService.setWinner(voting.getSchedule());
+            scheduleService.defineWinner(voting.getSchedule());
             scheduleRepository.save(voting.getSchedule());
         });
     }

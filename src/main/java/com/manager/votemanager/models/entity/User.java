@@ -1,5 +1,7 @@
 package com.manager.votemanager.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.RoleEnum;
 import lombok.AllArgsConstructor;
@@ -14,8 +16,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @Entity
@@ -54,6 +58,10 @@ public class User extends DateAudit implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", length = 20)
     private RoleEnum role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties("user")
+    private List<Vote> votesList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
