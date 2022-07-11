@@ -1,5 +1,7 @@
 package com.manager.votemanager.service;
 
+import com.manager.votemanager.constants.RabbitMQConstants;
+import com.manager.votemanager.dto.ScheduleResponseDto;
 import com.manager.votemanager.dto.SessionRequestDto;
 import com.manager.votemanager.dto.SessionStartRequestDto;
 import com.manager.votemanager.models.entity.Schedule;
@@ -29,11 +31,15 @@ public class VotingSessionService {
 
     private final ScheduleService scheduleService;
 
+    private final RabbitMQService rabbitMQService;
+
+
     public VotingSessionService(VotingSessionRepository votingSessionrepository, ScheduleRepository scheduleRepository,
-                                ScheduleService scheduleService) {
+                                ScheduleService scheduleService, RabbitMQService rabbitMQService) {
         this.votingSessionrepository = votingSessionrepository;
         this.scheduleRepository = scheduleRepository;
         this.scheduleService = scheduleService;
+        this.rabbitMQService = rabbitMQService;
     }
 
     private boolean verifyExistentSchedule(Long scheduleId) {
@@ -97,7 +103,10 @@ public class VotingSessionService {
             scheduleService.setPercent(voting.getSchedule());
             scheduleService.defineWinner(voting.getSchedule());
             scheduleRepository.save(voting.getSchedule());
+            ScheduleResponseDto dtoResponse = ScheduleResponseDto.convertToDto(voting.getSchedule());
+            rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_RESULT, dtoResponse);
         });
+
     }
 
     public Integer qtYes(VotingSession votingSession){
