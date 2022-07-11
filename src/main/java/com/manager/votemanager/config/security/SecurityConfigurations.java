@@ -63,7 +63,11 @@ public class SecurityConfigurations {
         http.authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/v1/user/create").permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/user/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/v1/vote/vote").hasRole(ROLE_COOPERATE)
+                .antMatchers(HttpMethod.POST,"/v1/vote/vote").permitAll()
+                .antMatchers(HttpMethod.POST,"/v1/vote/vote").hasRole(ROLE_ADMIN)
+                .antMatchers("/swagger-ui/#/").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("swagger-ui.html").permitAll()
                 .antMatchers("/v1/**").hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
@@ -75,8 +79,8 @@ public class SecurityConfigurations {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
+        return (web) -> web.ignoring()
+                .antMatchers("/.html", "/v2/api-docs",
+                        "/webjars/", "/configuration/", "/swagger-resources/","/swagger-ui/**");
     }
-
-
 }
