@@ -35,7 +35,7 @@ public class Vote extends DateAudit {
     private VotingSession votingSession;
 
     @ManyToOne
-    @JsonIgnoreProperties("votes")
+    @JsonIgnoreProperties("votesList")
     @JoinColumn(name = "fk_idUser")
     private User user;
 }

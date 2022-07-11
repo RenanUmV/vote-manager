@@ -31,11 +31,8 @@ public class VoteService {
         VotingSession votingSession = votingSessionService.getById(dto.getVoteSessionId());
         User user = userService.getByCpf(dto.getCpfUser());
 
-        if (votingSession == null) {
-
-            log.info("Vote session Not Found");
-            throw new RuntimeException("Vote Session Not Found");
-        }
+        validUser(user);
+        validSession(votingSession);
 
         Vote vote = Vote.builder()
                 .selectVote(dto.getVote())
@@ -66,5 +63,21 @@ public class VoteService {
     private Boolean hasVoted(VotingSession votingSession, User user){
 
         return voteRepository.existsByVotingSessionAndUser(votingSession, user);
+    }
+
+    private void validUser(User user){
+
+        if (user == null){
+
+            throw new RuntimeException("User not found!");
+        }
+    }
+
+    private void validSession(VotingSession votingSession){
+
+        if (votingSession == null){
+
+            throw new RuntimeException("User not found!");
+        }
     }
 }
