@@ -1,6 +1,5 @@
 package com.manager.votemanager.dto;
 
-import com.manager.votemanager.models.entity.User;
 import com.manager.votemanager.models.enums.VoteEnum;
 import lombok.Data;
 

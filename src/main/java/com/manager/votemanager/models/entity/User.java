@@ -1,6 +1,5 @@
 package com.manager.votemanager.models.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manager.votemanager.models.entity.audit.DateAudit;
 import com.manager.votemanager.models.enums.RoleEnum;
@@ -40,12 +39,12 @@ public class User extends DateAudit implements UserDetails {
     private String name;
 
     @NotNull
-    @Column(name = "CPF")
+    @Column(name = "CPF", unique = true)
     private String cpf;
 
     @NotNull
     @Email
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true)
     @Size(min = 10, max = 30)
     private String email;
 
