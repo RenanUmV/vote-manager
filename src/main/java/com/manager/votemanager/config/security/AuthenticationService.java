@@ -1,7 +1,7 @@
 package com.manager.votemanager.config.security;
 
-import com.manager.votemanager.models.entity.User;
-import com.manager.votemanager.repository.UserRepository;
+import com.manager.votemanager.models.v1.entity.User;
+import com.manager.votemanager.repository.v1.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

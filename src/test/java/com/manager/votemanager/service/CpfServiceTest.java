@@ -1,7 +1,8 @@
 package com.manager.votemanager.service;
 
 import com.manager.votemanager.config.CpfClient;
-import com.manager.votemanager.dto.CpfDto;
+import com.manager.votemanager.models.v1.dto.CpfDto;
+import com.manager.votemanager.service.v1.CpfService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,8 +1,8 @@
 package com.manager.votemanager.config.security;
 
-import com.manager.votemanager.models.entity.User;
-import com.manager.votemanager.models.enums.RoleEnum;
-import com.manager.votemanager.service.UserService;
+import com.manager.votemanager.models.v1.entity.User;
+import com.manager.votemanager.models.v1.enums.RoleEnum;
+import com.manager.votemanager.service.v1.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

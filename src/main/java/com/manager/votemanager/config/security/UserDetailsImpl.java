@@ -1,6 +1,6 @@
 package com.manager.votemanager.config.security;
 
-import com.manager.votemanager.models.entity.User;
+import com.manager.votemanager.models.v1.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

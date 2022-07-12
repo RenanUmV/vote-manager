@@ -1,6 +1,6 @@
 package com.manager.votemanager.config;
 
-import com.manager.votemanager.dto.CpfDto;
+import com.manager.votemanager.models.v1.dto.CpfDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

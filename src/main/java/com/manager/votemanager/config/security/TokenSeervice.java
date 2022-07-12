@@ -1,6 +1,6 @@
 package com.manager.votemanager.config.security;
 
-import com.manager.votemanager.models.entity.User;
+import com.manager.votemanager.models.v1.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

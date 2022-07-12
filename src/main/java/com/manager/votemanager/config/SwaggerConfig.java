@@ -18,14 +18,19 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    private static final String API_TITLE = "Converter APT";
+    private static final String API_VERSION_1 = "API v1";
+    private static final String API_DESCRIPTION = "\"REST API for Convert Patterns Microservice\"";
+
+
     @Bean
-    public Docket SolutisApi() {
+    public Docket apiV2() {
         return new Docket(DocumentationType.SWAGGER_2).
                 securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.manager.votemanager"))
-                .paths(PathSelectors.ant("/**"))
+                .paths(PathSelectors.ant("/v1.*"))
                 .build();
     }
 

@@ -1,7 +1,7 @@
 package com.manager.votemanager.config.security;
 
-import com.manager.votemanager.models.entity.User;
-import com.manager.votemanager.service.UserService;
+import com.manager.votemanager.models.v1.entity.User;
+import com.manager.votemanager.service.v1.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
