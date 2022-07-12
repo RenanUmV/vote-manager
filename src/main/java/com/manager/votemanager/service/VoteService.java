@@ -1,5 +1,7 @@
 package com.manager.votemanager.service;
 
+import com.manager.votemanager.advice.ClosedSessionException;
+import com.manager.votemanager.advice.NotFoundException;
 import com.manager.votemanager.dto.VoteRequestDto;
 import com.manager.votemanager.models.entity.User;
 import com.manager.votemanager.models.entity.Vote;
@@ -17,7 +19,6 @@ public class VoteService {
 
     private final VoteRepository voteRepository;
     private final VotingSessionService votingSessionService;
-
     private final UserService userService;
 
     @Autowired
@@ -43,7 +44,7 @@ public class VoteService {
         if (Boolean.TRUE.equals(hasVoted(votingSession, user))){
 
             log.info("Vote session Not Found");
-            throw new RuntimeException("This user has already voted");
+            throw new ClosedSessionException("This user has already voted");
         }
 
         log.info("Invalid CPF");
@@ -56,7 +57,7 @@ public class VoteService {
         if (vote.getVoteInstant().isAfter(vote.getVotingSession().getClosedAt())) {
 
             log.info("Expired voting session");
-            throw new RuntimeException("Expired voting session");
+            throw new ClosedSessionException("Expired voting session");
         }
     }
 
@@ -69,7 +70,7 @@ public class VoteService {
 
         if (user == null){
 
-            throw new RuntimeException("User not found!");
+            throw new NotFoundException("User not found!");
         }
     }
 
@@ -77,7 +78,7 @@ public class VoteService {
 
         if (votingSession == null){
 
-            throw new RuntimeException("User not found!");
+            throw new NotFoundException("User not found!");
         }
     }
 }

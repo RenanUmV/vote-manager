@@ -1,5 +1,6 @@
 package com.manager.votemanager.service;
 
+import com.manager.votemanager.advice.NotFoundException;
 import com.manager.votemanager.models.entity.Schedule;
 import com.manager.votemanager.models.enums.StatusEnum;
 import com.manager.votemanager.models.enums.VoteEnum;
@@ -28,7 +29,7 @@ public class ScheduleService {
 
     public Schedule getById(Long id){
 
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(()-> new NotFoundException("Schedule not found"));
     }
 
     public Schedule getByName(String name){

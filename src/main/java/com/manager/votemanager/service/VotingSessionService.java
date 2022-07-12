@@ -1,5 +1,8 @@
 package com.manager.votemanager.service;
 
+import com.manager.votemanager.advice.ClosedSessionException;
+import com.manager.votemanager.advice.InvalidRequestExcpetion;
+import com.manager.votemanager.advice.NotFoundException;
 import com.manager.votemanager.constants.RabbitMQConstants;
 import com.manager.votemanager.dto.ScheduleResponseDto;
 import com.manager.votemanager.dto.SessionRequestDto;
@@ -59,7 +62,7 @@ public class VotingSessionService {
 
     public VotingSession createSession(SessionRequestDto dto) {
         if (verifyExistentSchedule(dto.getScheduleId())) {
-            throw new RuntimeException("The given Voting session has been created");
+            throw new InvalidRequestExcpetion("The given Voting session has been created");
         }
 
         VotingSession votingSession = VotingSession.builder()
@@ -72,15 +75,20 @@ public class VotingSessionService {
 
     private Schedule getSchedule(SessionRequestDto dto) {
         return scheduleRepository.findById(dto.getScheduleId())
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+                .orElseThrow(() -> new NotFoundException("Schedule not found"));
     }
 
     public VotingSession startSession(SessionStartRequestDto dto) {
         VotingSession votingSession = votingSessionrepository.findById(dto.getSessionId())
-                .orElseThrow(() -> new RuntimeException("Voting Session not found!!!"));
+                .orElseThrow(() -> new NotFoundException("Voting Session not found"));
+
+        if(votingSession.getClosedAt() != null){
+
+            throw new InvalidRequestExcpetion("This session has been started!");
+        }
 
         if (votingSession.getSchedule().getStatus().equals(StatusEnum.valueOf("CLOSED"))){
-            throw new RuntimeException("This Schedule is CLOSED");
+            throw new ClosedSessionException("This Schedule is CLOSED");
         }
 
         votingSession.setClosedAt(Instant.now().plus(votingSession.getDuration(), ChronoUnit.SECONDS));

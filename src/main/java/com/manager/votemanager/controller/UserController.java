@@ -16,6 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,9 +26,9 @@ public class UserController {
 
     private final UserService userService;
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    private TokenSeervice tokenService;
+    private final TokenSeervice tokenService;
 
 
     @Autowired
@@ -43,6 +44,12 @@ public class UserController {
 
         log.info("Get user by name: {}", name);
         return new ResponseEntity<>(userService.getUser(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAll(){
+
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @PostMapping("/create")

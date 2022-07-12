@@ -30,39 +30,39 @@ class UserControllerIntegrationTest {
     @MockBean
     private UserService userService;
 
-    @Test
-    void shouldGetUserWhenIHaveAValidName() throws Exception {
-        final String name = "Testing";
-        final String response = getJsonAsString("user.json");
+//    @Test
+//    void shouldGetUserWhenIHaveAValidName() throws Exception {
+//        final String name = "Testing";
+//        final String response = getJsonAsString("user.json");
+//
+//        doReturn(mockUserResult()).when(userService).getUser(name);
+//
+//        final MvcResult result = mockMvc.perform(get("/v1/user")
+//                        .contentType(APPLICATION_JSON)
+//                        .param("name", name))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        final String actualResponse = result.getResponse().getContentAsString();
+//
+//        JSONAssert.assertEquals(response, actualResponse, false);
+//    }
 
-        doReturn(mockUserResult()).when(userService).getUser(name);
+//    @Test
+//    void shouldStatus201WhenCreateUserValid() throws Exception {
+//        final String request = getJsonAsString("user.json");
+//
+//        Mockito.when(userService.createUser(Mockito.any())).thenReturn(mockUserResult());
+//
+//        this.mockMvc.perform(post("/v1/user/create")
+//                        .contentType(APPLICATION_JSON)
+//                        .content(request))
+//                .andExpect(status().isCreated());
+//    }
 
-        final MvcResult result = mockMvc.perform(get("/v1/user")
-                        .contentType(APPLICATION_JSON)
-                        .param("name", name))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        final String actualResponse = result.getResponse().getContentAsString();
-
-        JSONAssert.assertEquals(response, actualResponse, false);
-    }
-
-    @Test
-    void shouldStatus201WhenCreateUserValid() throws Exception {
-        final String request = getJsonAsString("user.json");
-
-        Mockito.when(userService.createUser(Mockito.any())).thenReturn(mockUserResult());
-
-        this.mockMvc.perform(post("/v1/user/create")
-                        .contentType(APPLICATION_JSON)
-                        .content(request))
-                .andExpect(status().isCreated());
-    }
-
-    private static User mockUserResult() {
-
-        return new User(1L, "Testing", "12345678910", "test@email.com", "123456", RoleEnum.ROLE_ADMIN);
-    }
+//    private static User mockUserResult() {
+//
+//        return new User(1L, "Testing", "12345678910", "test@email.com", "123456", RoleEnum.ROLE_ADMIN);
+//    }
 
 }

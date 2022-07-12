@@ -1,5 +1,6 @@
 package com.manager.votemanager.service;
 
+import com.manager.votemanager.advice.NotFoundException;
 import com.manager.votemanager.models.entity.User;
 import com.manager.votemanager.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,25 +32,24 @@ public class UserService {
     public User getUser(String name) {
 
         log.info("Get user by name: {}", name);
-        return repository.findByName(name).orElse(null);
+        return repository.findByName(name).orElseThrow(() -> new NotFoundException("User note found"));
     }
 
-    public User getByEmail(String email){
+    public List<User> getAllUsers(){
 
-        log.info("Get user by email: {}", email);
-        return repository.findByEmail(email).orElse(null);
+        return repository.findAll();
     }
 
     public User getUserById(Long id){
 
         log.info("Get user by id: {}", id);
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("User note found"));
     }
 
     public User getByCpf(String cpf){
 
         log.info("Get user by cpf: {}", cpf);
-        return repository.findByCpf(cpf).orElse(null);
+        return repository.findByCpf(cpf).orElseThrow(() -> new NotFoundException("User note found"));
     }
 
     public User createUser(User user){
