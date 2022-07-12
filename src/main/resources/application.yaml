@@ -4,6 +4,11 @@ spring:
     url: jdbc:mysql://localhost/db_manager?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false
     username: root
     password: 123123
+    initialization-mode: always
+
+  sql:
+    init:
+      mode: always
 
 #jpa
   jpa:
@@ -13,6 +18,7 @@ spring:
         show_sql: 'false'
     hibernate:
       ddl-auto: update
+    defer-datasource-initialization: true
 
 #jwt
   vote-manager:
