@@ -57,7 +57,8 @@ public class VotingSessionService {
 
     public VotingSession getById(Long id){
 
-        return votingSessionrepository.findById(id).orElse(null);
+        return votingSessionrepository
+                .findById(id).orElseThrow(() -> new NotFoundException("Voting session not found"));
     }
 
     public VotingSession createSession(SessionRequestDto dto) {
