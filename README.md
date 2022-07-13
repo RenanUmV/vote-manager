@@ -11,7 +11,7 @@ Itens necessários:
 
 - Maven 3.8.6
 - Java 11
-- Docker Desktop
+- Docker
 
 ## :memo: Execução do projeto
 
