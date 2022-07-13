@@ -48,6 +48,7 @@ Junto com a aplicação foi disponibilizado uma coleção do Postman, que poder�
  - [Swagger](http://localhost:8080/swagger-ui/index.html)
 
  - [RebbitMQ](http://localhost:15672)
+        ```login: admin  senha: 123123```
 
  - [Coleção do Postman](https://github.com/RenanUmV/vote-manager/blob/main/VoterManagerSolutis.postman_collection.json)
 
