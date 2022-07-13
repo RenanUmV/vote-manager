@@ -1,52 +1,66 @@
 package com.manager.votemanager.service.v1;
 
 import com.manager.votemanager.advice.NotFoundException;
+import com.manager.votemanager.models.v1.dto.ScheduleRequestDto;
+import com.manager.votemanager.models.v1.dto.ScheduleResponseDto;
 import com.manager.votemanager.models.v1.entity.Schedule;
 import com.manager.votemanager.models.v1.enums.StatusEnum;
 import com.manager.votemanager.models.v1.enums.VoteEnum;
 import com.manager.votemanager.repository.v1.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ScheduleService {
 
     private final ScheduleRepository repository;
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public ScheduleService(ScheduleRepository repository) {
+    public ScheduleService(ScheduleRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
+        this.modelMapper = modelMapper;
     }
 
-    public List<Schedule> getAll(){
+    public List<ScheduleResponseDto> getAll(){
 
-        return repository.findAll();
+        List<Schedule> list = repository.findAll();
+
+        return list.stream().map(
+                schedule -> modelMapper.map(schedule, ScheduleResponseDto.class)
+        ).collect(Collectors.toList());
     }
 
-    public Schedule getById(Long id){
+    public ScheduleResponseDto getById(Long id){
 
-        return repository.findById(id).orElseThrow(()-> new NotFoundException("Schedule not found"));
+        Schedule schedule = repository.findById(id).orElseThrow(()-> new NotFoundException("Schedule not found"));
+
+        return modelMapper.map(schedule, ScheduleResponseDto.class);
     }
 
-    public Schedule getByName(String name){
+    public ScheduleResponseDto getByName(String name){
 
-        return repository.findByName(name).orElse(null);
+        Schedule schedule = repository.findByName(name).orElseThrow(()-> new NotFoundException("Schedule not found"));
+
+        return modelMapper.map(schedule, ScheduleResponseDto.class);
     }
 
-    public Schedule createSchedule(Schedule source){
-        source.setStatus(StatusEnum.OPEN);
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto scheduleRequestDto){
+        log.info("Creating Schedule: {}", scheduleRequestDto.getName());
 
-        log.info("Create Schedule with name: {}", source.getName());
-        return repository.save(source);
-    }
+        Schedule schedule = repository.save(buildSchedule(scheduleRequestDto));
 
-    public void deleteWithId(Long id){
+        ScheduleResponseDto scheduleResponseDto = buildScheduleResponse(schedule);
 
-        repository.deleteById(id);
+        log.info("Create Schedule with name: {}", schedule.getName());
+        return scheduleResponseDto;
     }
 
     public void changeStatus(Schedule source){
@@ -86,5 +100,26 @@ public class ScheduleService {
                     Double.valueOf(schedule.getQtdNo())/ schedule.getQtdVotes())*100), 2));
         }
 
+    }
+
+    private Schedule buildSchedule(ScheduleRequestDto scheduleRequestDto){
+        return Schedule.builder()
+                .name(scheduleRequestDto.getName())
+                .description(scheduleRequestDto.getDescription())
+                .status(StatusEnum.OPEN)
+                .build();
+    }
+
+    private ScheduleResponseDto buildScheduleResponse(Schedule schedule){
+        return ScheduleResponseDto.builder()
+                .id(schedule.getId())
+                .name(schedule.getName())
+                .description(schedule.getDescription())
+                .status(schedule.getStatus())
+                .qtdVotes(schedule.getQtdVotes())
+                .qtdYes(schedule.getQtdYes())
+                .qtdNo(schedule.getQtdNo())
+                .yesPercent(schedule.getYesPercent())
+                .noPercent(schedule.getNoPercent()).build();
     }
 }

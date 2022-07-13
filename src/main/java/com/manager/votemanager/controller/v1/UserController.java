@@ -42,14 +42,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<User> getUser(@RequestParam String name){
+    public ResponseEntity<UserResponseDto> getUser(@RequestParam String name){
 
         log.info("Get user by name: {}", name);
         return new ResponseEntity<>(userService.getUser(name), HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAll(){
+    public ResponseEntity<List<UserResponseDto>> getAll(){
 
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user){
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody User user){
 
         log.info("Update user: {}", user.getName());
         return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);

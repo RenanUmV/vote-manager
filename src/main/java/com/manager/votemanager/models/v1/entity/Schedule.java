@@ -3,6 +3,7 @@ package com.manager.votemanager.models.v1.entity;
 import com.manager.votemanager.models.v1.entity.audit.DateAudit;
 import com.manager.votemanager.models.v1.enums.StatusEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
+@Builder
 @Table(name = "SCHEDULE")
 @NoArgsConstructor
 @AllArgsConstructor

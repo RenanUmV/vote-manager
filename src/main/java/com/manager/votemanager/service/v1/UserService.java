@@ -6,6 +6,7 @@ import com.manager.votemanager.models.v1.dto.UserResponseDto;
 import com.manager.votemanager.models.v1.entity.User;
 import com.manager.votemanager.repository.v1.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,23 +25,31 @@ public class UserService {
     @Autowired
     CpfService cpfService;
 
-    @Autowired
     private final UserRepository repository;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
+        this.modelMapper = modelMapper;
     }
 
-    public User getUser(String name) {
+    public UserResponseDto getUser(String name) {
+
+        User user = repository.findByName(name).orElseThrow(() -> new NotFoundException("User note found"));
 
         log.info("Get user by name: {}", name);
-        return repository.findByName(name).orElseThrow(() -> new NotFoundException("User note found"));
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
 
-        return repository.findAll();
+        List<User> list = repository.findAll();
+
+        return list.stream().map(
+                user -> modelMapper.map(user, UserResponseDto.class)
+        ).collect(Collectors.toList());
     }
 
     public User getUserById(Long id) {
@@ -74,6 +84,7 @@ public class UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .cpf(user.getCpf())
+                .voteList(user.getVotesList())
                 .role(user.getRole()).build();
     }
 
@@ -86,7 +97,7 @@ public class UserService {
                 .role(userRequestDto.getRole()).build();
     }
 
-    public User updateUser(User user) {
+    public UserResponseDto updateUser(User user) {
 
         if (repository.findById(user.getId()).isPresent()) {
             Optional<User> findUser = repository.findByEmail(user.getEmail());
@@ -101,7 +112,10 @@ public class UserService {
             }
 
             user.setPassword(encryptPassword(user.getPassword()));
-            return repository.save(user);
+
+            User userUpdated = repository.save(user);
+
+            return buildResponse(userUpdated);
         }
         log.info("User Not Found");
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found", null);

@@ -2,13 +2,17 @@ package com.manager.votemanager.models.v1.dto;
 
 import com.manager.votemanager.models.v1.entity.Schedule;
 import com.manager.votemanager.models.v1.enums.StatusEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ScheduleResponseDto implements Serializable {
 
     private Long id;
