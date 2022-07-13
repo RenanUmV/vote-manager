@@ -2,8 +2,10 @@ package com.manager.votemanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
@@ -18,21 +20,27 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    private static final String API_TITLE = "Converter APT";
+    private static final String API_TITLE = "VOTE MANAGER API";
     private static final String API_VERSION_1 = "API v1";
-    private static final String API_DESCRIPTION = "\"REST API for Convert Patterns Microservice\"";
+    private static final String API_DESCRIPTION = "\"REST API for Vote Schedules with voting sessions\"";
 
 
     @Bean
-    public Docket apiV2() {
-        return new Docket(DocumentationType.SWAGGER_2).
-                securityContexts(Arrays.asList(securityContext()))
+    public Docket SolutisApiV1() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
+                .apiInfo(metaData("1.0"))
+                .useDefaultResponseMessages(false)
+                .groupName(API_VERSION_1)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.manager.votemanager"))
-                .paths(PathSelectors.ant("/v1.*"))
+                .paths(PathSelectors.ant("/**"))
                 .build();
     }
+
+
+
 
     private ApiKey apiKey() {
         return new ApiKey("JWT", "Authorization", "header");
@@ -46,6 +54,15 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    }
+
+    private ApiInfo metaData(final String version) {
+
+        return new ApiInfoBuilder()
+                .title(API_TITLE)
+                .description(API_DESCRIPTION)
+                .version(version)
+                .build();
     }
 
 }
