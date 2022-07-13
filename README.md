@@ -33,7 +33,7 @@ Itens necessários:
 
         mvn clean install
 
-6. Abrir o projeto numa IDE de sua escolha.
+6. Abrir o projeto em uma IDE de sua escolha.
 
 7. Rodar a aplicação clicando com o botão direito no arquivo: **VoteManagerApplication** e executando.
 
@@ -57,7 +57,8 @@ Junto com a aplicação foi disponibilizado uma coleção do Postman, que poder�
   <summary>(RF0) Autenticação e autorização.</summary>
   <br/>
   <pre>
-  - Todo usuário, seja ele administrador ou cooperado (pessoa que votam) deve estar devidamente autenticado para operar o sistema. (Utilize bearer token JWT).
+  - Todo usuário, seja ele administrador ou cooperado (pessoa que votam) deve estar devidamente autenticado para
+    operar o sistema.(Utilize bearer token JWT).
   - Usuários administradores podem realizar todas as operações do sistema. 
   - Usuários cooperados podem apenas votar. 
   - Deve ser possível adicionar, alterar ou excluir usuários.
