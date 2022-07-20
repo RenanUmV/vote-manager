@@ -1,5 +1,5 @@
 
-# :rocket: Desafio Solutis 
+# :rocket: Sistema de gestão de votos 
 
 Desafio proposto para a construção de uma API, onde uma cooperativa possui associados e cada associado possui um voto, e as decisões são tomadas através de assembleias, por votação
 
